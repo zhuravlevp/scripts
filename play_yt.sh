@@ -5,6 +5,8 @@ url="$1"
 
 #Max resolution
 RES="1080"
+#RES="1440"
+#RES="2160"
 
 [ -z "$url" ] && exit 1
 YOU_DL="$(which youtube-dl)"
