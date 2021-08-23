@@ -17,7 +17,7 @@ YOU_DL="$(which youtube-dl)"
 
 func_get_data () {
 # Set codec avc1 to use video without HDR
-full_data="$($YOU_DL -e -g -f "bestvideo[height<=?$RES][ext=mp4][vcodec^=avc1]"+worstaudio/"best[height<=?$RES]" "$url")"
+full_data="$($YOU_DL -e -g -f "bestvideo[height<=?$RES][ext=mp4][vcodec^=avc1]"+worstaudio[ext=m4a]/"best[height<=?$RES]" "$url")"
 
 # For HDR
 #full_data="$($YOU_DL -e -g -f "bestvideo[height<=?$RES][ext=mp4]"+worstaudio/"best[height<=?$RES]" "$url")"
