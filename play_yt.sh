@@ -3,6 +3,10 @@
 #url="$(xclip -o -selection clipboard)"
 url="$1"
 
+TEST_SPEED_FILE=/tmp/play_yt_speedtest
+# Use for set min bandwidth (KB/s)
+TEST_SPEED_FILE_SIZE_LIMIT=1024 # 1MB
+
 #Max resolution
 RES="1080"
 #RES="1440"
@@ -11,12 +15,25 @@ RES="1080"
 [ -z "$url" ] && exit 1
 YOU_DL="$(which youtube-dl)"
 
+func_get_data () {
+# Set codec avc1 to use video without HDR
 full_data="$($YOU_DL -e -g -f "bestvideo[height<=?$RES][ext=mp4][vcodec^=avc1]"+worstaudio/"best[height<=?$RES]" "$url")"
-# If you use HDR 
+
+# For HDR
 #full_data="$($YOU_DL -e -g -f "bestvideo[height<=?$RES][ext=mp4]"+worstaudio/"best[height<=?$RES]" "$url")"
 
 TITLE="$(sed -n 1p <<< $full_data)"
 URL_VIDEO="$(sed -n 2p <<< $full_data)"
 URL_AUDIO="$(sed -n 3p <<< $full_data)"
+}
 
-vlc -q -d "$URL_VIDEO" --input-slave "$URL_AUDIO" --meta-title "$TITLE"
+while [[ -z "$CHECK_SPEED" ]]
+do
+func_get_data
+(ulimit -S -f ${TEST_SPEED_FILE_SIZE_LIMIT}; timeout -s SIGINT 1 wget -q -O ${TEST_SPEED_FILE} "$URL_VIDEO") >/dev/null 2>&1
+# Exit code 153: if wget killed ulimit
+# Exit code 124: if wget killed timeout
+[[ "$?" == "153" ]] && CHECK_SPEED=OK || echo "Check speed fail, retry... $URL_VIDEO"
+done
+
+vlc -q -d "$URL_VIDEO" --input-slave "$URL_AUDIO" --meta-title "$TITLE" >/dev/null 2>&1
