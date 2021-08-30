@@ -40,4 +40,5 @@ done
 #vlc -q -d "$URL_VIDEO" --input-slave "$URL_AUDIO" --meta-title "$TITLE" >/dev/null 2>&1
 
 # Send command play video to rc interface vlc on port ${RC_PORT}
-echo "add $URL_VIDEO :input-slave=$URL_AUDIO :meta-title=$TITLE" | netcat localhost ${RC_PORT} -w 1
+# enqueue | add
+echo "enqueue $URL_VIDEO :input-slave=$URL_AUDIO :meta-title=$TITLE" | netcat localhost ${RC_PORT} -w 1

@@ -38,8 +38,8 @@ else
   if [[ "${USER[USERNAME]}" == "${BOTADMIN}" ]]
   then
     case "${MESSAGE}" in
-      "https://www.youtube"*) /home/pz/scripts/play_yt.sh "${MESSAGE}"; send_normal_message "${USER[ID]}" "Play video"  ;;
-      "https://youtu.be"*) /home/pz/scripts/play_yt.sh "${MESSAGE}";  send_normal_message "${USER[ID]}" "Play video" ;;
+      "https://www.youtube"*) ${SCRIPTS_DIR}/play_yt.sh "${MESSAGE}"; send_normal_message "${USER[ID]}" "Play video"  ;;
+      "https://youtu.be"*) ${SCRIPTS_DIR}/play_yt.sh "${MESSAGE}";  send_normal_message "${USER[ID]}" "Play video" ;;
       "https://"*|"http://"*) send_normal_message "${USER[ID]}" "INVALID_URL ${MESSAGE}";;
       *) send_normal_message "${USER[ID]}" "???";;
     esac
