@@ -1,4 +1,5 @@
 #!/bin/bash
+#set -x
 #Using script with shortcut & clipboard
 #url="$(xclip -o -selection clipboard)"
 url="$1"
@@ -34,7 +35,10 @@ func_get_data
 (ulimit -S -f ${TEST_SPEED_FILE_SIZE_LIMIT}; timeout -s SIGINT 1 wget -q -O ${TEST_SPEED_FILE} "$URL_VIDEO") >/dev/null 2>&1
 # Exit code 153: if wget killed ulimit
 # Exit code 124: if wget killed timeout
-[[ "$?" == "153" ]] && CHECK_SPEED=OK || echo "Check speed fail, retry... $URL_VIDEO"
+#[[ "$?" == "153" ]] && CHECK_SPEED=OK || echo "Check speed fail, retry... $URL_VIDEO"
+[[ "$?" == "124" ]] && echo "Check speed fail, retry... $URL_VIDEO" || CHECK_SPEED=OK
+((CHECK_SPEED_TRY++))
+[[ "$CHECK_SPEED_TRY" -ge "5" ]] && echo "Fail" && exit 1
 done
 
 #vlc -q -d "$URL_VIDEO" --input-slave "$URL_AUDIO" --meta-title "$TITLE" >/dev/null 2>&1
