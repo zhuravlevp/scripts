@@ -8,6 +8,7 @@ Play video or stream from youtube.com with any resolution (4K, 1440p, 1080p ...)
 - vlc
 - wget
 - netcat
+- streamlink
 ### Run: 
 ```
 ./start_vlc.sh
